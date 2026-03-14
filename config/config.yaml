@@ -1,0 +1,214 @@
+active_scenario: "Niscemi_Scuola"
+
+project:
+  base_name: "Piano Terra"
+  top_name: "Ultimo Impalcato"
+  out_prefix: "coherence_building_3C"
+  output_dir: "output"
+  figures_subdir: "figures"
+  run_name: null  # null => auto: <scenario>_<YYYYmmdd_HHMMSS>
+
+io:
+  output_units: "m/s^2"   # "g" | "m/s^2"
+  g0: 9.80665
+
+event:
+  first_arrival:
+    enabled: true
+    #pick_time_utc: "2026-03-09 23:04:42.610" # per ML59
+    #pick_time_utc: "2026-02-28 10:19:08.859" # per ML35, da pick manuale su OCF09 Z: 2026-03-10 23:03:08.500
+    pick_time_utc: "2026-03-10 00:00:00.000" # per acquisizione Scuola 00_01
+    window:
+      pre_sec: 0.0
+      post_sec: 3600.0
+    apply_to:
+      - "coherence"
+      - "response_spectra"
+      - "station_summary"
+
+scenarios:
+
+  #iervolino_ml59:
+    #data_dir: "E:/Patane/PATANE_2026/RETE OSU/OSU_Flegrei/20260310_2303_ML59"
+    #files:
+      #Z1: "IV.OCF09.00.HNZ.D.2026.068_23_03_00_23_15_00.mseed"
+      #N1: "IV.OCF09.00.HNN.D.2026.068_23_03_00_23_15_00.mseed"
+      #E1: "IV.OCF09.00.HNE.D.2026.068_23_03_00_23_15_00.mseed"
+      #Z2: "LK.AF012.02.BNZ.D.2026.068_23_03_00_23_15_00.mseed"
+      #N2: "LK.AF012.02.BNN.D.2026.068_23_03_00_23_15_00.mseed"
+      #E2: "LK.AF012.02.BNE.D.2026.068_23_03_00_23_15_00.mseed"
+
+  #iervolino_ml35:
+    #data_dir: "E:/Patane/PATANE_2026/RETE OSU/OSU_Flegrei/20260228_1019_Md35/Tagliato"
+    #files:
+      #Z1: "IV.OCF09.00.HNZ.D.2026.059_10_19_00_10_20_00.mseed"
+      #N1: "IV.OCF09.00.HNN.D.2026.059_10_19_00_10_20_00.mseed"
+      #E1: "IV.OCF09.00.HNE.D.2026.059_10_19_00_10_20_00.mseed"
+      #Z2: "LK.AF012.02.BNZ.D.2026.059_10_19_00_10_20_00.mseed"
+      #N2: "LK.AF012.02.BNN.D.2026.059_10_19_00_10_20_00.mseed"
+      #E2: "LK.AF012.02.BNE.D.2026.059_10_19_00_10_20_00.mseed"
+
+  Niscemi_Scuola:
+    data_dir: "E:/Patane/PATANE_2026/RETE OSU/Niscemi/DPC Nazionale/Scuola Belvedere 10032026_00_01"
+    files:
+      Z1: "IT.NIS21..HNZ.D.2026.069_00_00_00_01_00_00.mseed_00_05_00_00_15_00.mseed"
+      N1: "IT.NIS21..HNN.D.2026.069_00_00_00_01_00_00.mseed_00_05_00_00_15_00.mseed"
+      E1: "IT.NIS21..HNE.D.2026.069_00_00_00_01_00_00.mseed_00_05_00_00_15_00.mseed"
+      Z2: "IT.NIS24..HNZ.D.2026.069_00_00_00_01_00_00.mseed_00_05_00_00_15_00.mseed"
+      N2: "IT.NIS24..HNN.D.2026.069_00_00_00_01_00_00.mseed_00_05_00_00_15_00.mseed"
+      E2: "IT.NIS24..HNE.D.2026.069_00_00_00_01_00_00.mseed_00_05_00_00_15_00.mseed"
+
+    # Esempi: sostituisci con i fattori reali del tuo setup edificio Iervolino
+    #counts_to_g:
+      #Z1: 5.960464477539063e-08   # 1/2**24 (OSU M-A352)
+      #N1: 5.960464477539063e-08
+      #E1: 5.960464477539063e-08
+      #Z2: 9.53674e-07             # 16/2**24 (Lunitek M-A352)
+      #N2: 9.53674e-07
+      #E2: 9.53674e-07
+
+    # Esempi: sostituisci con i fattori reali del tuo setup edificio Iervolino
+    counts_to_g:
+      Z1: 1.4897e-08   # Lunitek FBA
+      N1: 1.4897e-08 
+      E1: 1.4897e-08 
+      Z2: 1.4897e-08   # Lunitek FBA
+      N2: 1.4897e-08 
+      E2: 1.4897e-08 
+
+inputs:
+  pair_map:
+    Z: ["Z1", "Z2"]
+    N: ["N1", "N2"]
+    E: ["E1", "E2"]
+
+processing:
+  detrend: true
+
+  # NEW: filtro opzionale sul raw dopo detrend/demean.
+  # Supporta:
+  # - filtro unico (type/fmin/fmax)
+  # - filtro per componente (Z/N/E) via by_comp
+  filter:
+    enabled: true
+    type: "bandpass"     # "bandpass" | "highpass" | "lowpass"
+    order: 4
+    fmin: 0.2           # usato da bandpass/highpass
+    fmax: 40.0           # usato da bandpass/lowpass
+    by_comp:
+      Z:
+        enabled: false
+        type: "bandpass"
+        order: 4
+        fmin: 0.5
+        fmax: 25.0
+      N:
+        enabled: false
+        type: "bandpass"
+        order: 4
+        fmin: 0.5
+        fmax: 15.0
+      E:
+        enabled: false
+        type: "bandpass"
+        order: 4
+        fmin: 0.5
+        fmax: 15.0
+
+  horizontal_combined:
+    enabled: true
+    method: "rms"   # "rms" | "sum"
+
+welch:
+  nperseg: 1024
+  noverlap_frac: 0.50
+  window: "hann"
+
+multitaper:
+  enabled: true
+  nw: 3.5
+  kmax: null
+  weighting: "eigs"
+
+bands_hz:
+  - [0.5, 3.0]
+  - [3.0, 8.0]
+  - [8.0, 15.0]
+
+lag_alignment:
+  enabled: true
+  max_lag_sec: 0.50
+  min_xcorr_for_align: 0.5
+  filter_order: 4
+  align_band_hz_by_comp:
+    Z: [1.0, 15.0]
+    N: [1.0, 4.0]
+    E: [1.0, 4.0]
+
+thresholds:
+  coh_threshold: 0.7
+  corr_threshold: 0.5
+
+plot:
+  save_fig: true
+  plot_max_freq: 60.0
+  psd_db_ylim: null
+  amp_db_ylim: null
+  frf:
+    min_coh_to_plot: 0.6
+    db_clip: [-80.0, 80.0]
+
+peak_picking:
+  enabled: true
+  label_fontsize: 8
+  amp:
+    search_band_hz: [0.5, 20.0]
+    min_prom_db: 1.5
+    min_distance_hz: 0.1
+    max_n: 5
+    min_coh: 0.5
+    draw_on_welch_amp: true
+  psd_top:
+    search_band_hz: [0.5, 20.0]
+    min_prom_db: 3.0
+    min_distance_hz: 0.3
+    max_n: 5
+    draw_on_welch_psd: true
+
+extra_figures:
+  time_traces:
+    enabled: false
+    max_seconds: null
+
+  response_spectra:
+    enabled: false
+    analyze_one_triplet: false
+    triplet_id: "TOP"         # "BASE" | "TOP"
+    use_horizontal: true
+    damping: 0.05
+    tmin: 0.02
+    tmax: 2.5
+    tn: 140
+    save_kinds: ["SA", "PSA"]
+    save_units: ["m/s^2", "g"]
+
+  station_summary:
+    enabled: true
+    station_name: "Station OCF09 vs AF012"
+    base_station: "OCF09"
+    top_station: "AF012"
+    rs_kind: "PSA"
+    sa_units_list: ["g", "m/s^2"]
+    max_seconds: null
+    show_on_screen: true
+
+export:
+  station_csv:
+    enabled: true
+    which: "BOTH"          # BASE | TOP | BOTH
+    filename: "station_metrics_BOTH.csv"
+    base_station: "OCF09"
+    top_station: "AF012"
+    psa_periods: [0.3, 1.0, 3.0]
+    husid_frac_75: 0.75
+    husid_frac_90: 0.90
