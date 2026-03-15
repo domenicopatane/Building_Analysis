@@ -1,0 +1,73 @@
+{
+  "floors": [
+    {
+      "id": -1,
+      "label": "Interrato",
+      "z_base": -0.1,
+      "x_offset": 0.0,
+      "y_offset": 0.0,
+      "width": 1.0,
+      "height": 0.63
+    },
+    {
+      "id": 0,
+      "label": "Piano Terra",
+      "z_base": 0.0,
+      "x_offset": 0.0,
+      "y_offset": 0.0,
+      "width": 1.0,
+      "height": 0.63
+    },
+    {
+      "id": 1,
+      "label": "Piano Primo",
+      "z_base": 0.1,
+      "x_offset": 0.0,
+      "y_offset": 0.0,
+      "width": 1.0,
+      "height": 0.63
+    }
+  ],
+  "nodes": [
+    {
+      "id": "S01",
+      "label": "NIS21",
+      "x": 0.93,
+      "y": 0.25,
+      "z": -0.1,
+      "floor_id": -1
+    },
+    {
+      "id": "S02",
+      "label": "NIS22",
+      "x": 0.93,
+      "y": 0.25,
+      "z": 0.0,
+      "floor_id": 0
+    },
+    {
+      "id": "S03",
+      "label": "NIS23",
+      "x": 0.05,
+      "y": 0.58,
+      "z": 0.0,
+      "floor_id": 0
+    },
+    {
+      "id": "S04",
+      "label": "NIS24",
+      "x": 0.93,
+      "y": 0.25,
+      "z": 0.1,
+      "floor_id": 1
+    },
+    {
+      "id": "S05",
+      "label": "NIS25",
+      "x": 0.05,
+      "y": 0.58,
+      "z": 0.1,
+      "floor_id": 1
+    }
+  ]
+}

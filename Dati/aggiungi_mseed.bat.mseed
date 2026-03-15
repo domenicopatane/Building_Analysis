@@ -1,0 +1,13 @@
+@echo off
+REM Aggiunge .mseed ai file che non hanno estensione nella cartella corrente
+
+for %%f in (*) do (
+    REM Verifica che il file NON abbia già un punto (nessuna estensione)
+    echo %%~xf | findstr "^$" >nul
+    if %errorlevel%==0 (
+        ren "%%f" "%%f.mseed"
+        echo Rinominato: %%f → %%f.mseed
+    )
+)
+echo Operazione completata.
+pause
